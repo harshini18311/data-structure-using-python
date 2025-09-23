@@ -1,0 +1,63 @@
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class Stack:
+    def __init__(self):
+        self.top = None
+
+    def push(self, value):
+        new_node = Node(value)
+        if self.top is None:
+            new_node.next = None
+        else:
+            new_node.next = self.top
+        self.top = new_node
+        print(f"{value} pushed into stack.")
+    def peek(self):
+        if self.top is None:
+            print("Stack is Empty!!!")
+        else:
+            temp = self.top
+            print(f"Top book: {temp.data}")
+
+    def pop(self):
+        if self.top is None:
+            print("Stack is Empty!!!")
+            return
+        temp = self.top
+        self.top = self.top.next
+        print(f"{temp.data} popped from stack.")
+
+
+    def display(self):
+        if self.top is None:
+            print("Stack is Empty!!!")
+            return
+        temp = self.top
+        print("Stack elements:")
+        while temp is not None:
+            print(f"{temp.data} --> ", end="")
+            temp = temp.next
+        print("NULL")
+
+if __name__ == "__main__":
+    s = Stack()
+    while True:
+        print("\n--- Stack Menu ---")
+        print("1. Push\n2. Pop\n3. Display\n4. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            value = int(input("Enter value to push: "))
+            s.push(value)
+        elif choice == '2':
+            s.pop()
+        elif choice == '3':
+            s.display()
+        elif choice == '4':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice! Try again.")
