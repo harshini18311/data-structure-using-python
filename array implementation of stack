@@ -1,0 +1,53 @@
+class BookStack:
+    def __init__(self):
+        self.stack = []
+
+    def push(self, book_title):
+        self.stack.append(book_title)
+        print(f'"{book_title}" added to stack.')
+
+    def pop(self):
+        if not self.stack:
+            print("Stack is empty. Cannot pop.")
+        else:
+            removed = self.stack.pop()
+            print(f'"{removed}" removed from stack.')
+
+    def peek(self):
+        if not self.stack:
+            print("Stack is empty.")
+        else:
+            print(f'Top of stack: "{self.stack[-1]}"')
+
+    def display(self):
+        if not self.stack:
+            print("Stack is empty.")
+        else:
+            print("Stack contents from top to bottom:")
+            for book in reversed(self.stack):
+                print(f"- {book}")
+
+book_stack = BookStack()
+while True:
+    print("\n--- Stack Menu ---")
+    print("1. Push book")
+    print("2. Pop book")
+    print("3. Peek top book")
+    print("4. Display stack")
+    print("5. Exit")
+    choice = input("Enter your choice (1-5): ")
+
+    if choice == '1':
+        book = input("Enter book title to push: ")
+        book_stack.push(book)
+    elif choice == '2':
+        book_stack.pop()
+    elif choice == '3':
+        book_stack.peek()
+    elif choice == '4':
+        book_stack.display()
+    elif choice == '5':
+        print("Exiting program.")
+        break
+    else:
+        print("Invalid choice. Try again.")
