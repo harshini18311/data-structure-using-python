@@ -1,0 +1,147 @@
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    # Insert nodes in level-order
+    def insert(self, value):
+        new_node = Node(value)
+        if not self.root:
+            self.root = new_node
+            return
+
+        queue = [self.root]
+        while queue:
+            current = queue.pop(0)
+            if not current.left:
+                current.left = new_node
+                return
+            else:
+                queue.append(current.left)
+
+            if not current.right:
+                current.right = new_node
+                return
+            else:
+                queue.append(current.right)
+
+    # Traversals
+    def inorder(self, node, result):
+        if node:
+            self.inorder(node.left, result)
+            result.append(node.value)
+            self.inorder(node.right, result)
+
+    def preorder(self, node, result):
+        if node:
+            result.append(node.value)
+            self.preorder(node.left, result)
+            self.preorder(node.right, result)
+
+    def postorder(self, node, result):
+        if node:
+            self.postorder(node.left, result)
+            self.postorder(node.right, result)
+            result.append(node.value)
+
+    def level_order(self):
+        result, queue = [], []
+        if self.root:
+            queue.append(self.root)
+        while queue:
+            current = queue.pop(0)
+            result.append(current.value)
+            if current.left:
+                queue.append(current.left)
+            if current.right:
+                queue.append(current.right)
+        return result
+
+    # Height
+    def height(self, node):
+        if not node:
+            return 0
+        return 1 + max(self.height(node.left), self.height(node.right))
+
+    # Count nodes
+    def count_nodes(self, node):
+        if not node:
+            return 0
+        return 1 + self.count_nodes(node.left) + self.count_nodes(node.right)
+
+    # Search
+    def search(self, node, value):
+        if not node:
+            return False
+        if node.value == value:
+            return True
+        return self.search(node.left, value) or self.search(node.right, value)
+
+
+def main():
+    tree = BinaryTree()
+    print("🌳 Binary Tree Operations")
+
+    while True:
+        print("\nOptions:")
+        print("1 - Insert node")
+        print("2 - Inorder Traversal")
+        print("3 - Preorder Traversal")
+        print("4 - Postorder Traversal")
+        print("5 - Level Order Traversal")
+        print("6 - Tree Height")
+        print("7 - Count Nodes")
+        print("8 - Search a Node")
+        print("9 - Exit")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == '1':
+            val = input("Enter value to insert: ").strip()
+            tree.insert(val)
+            print(f"Inserted {val} into tree.")
+
+        elif choice == '2':
+            res = []
+            tree.inorder(tree.root, res)
+            print("Inorder Traversal:", res)
+
+        elif choice == '3':
+            res = []
+            tree.preorder(tree.root, res)
+            print("Preorder Traversal:", res)
+
+        elif choice == '4':
+            res = []
+            tree.postorder(tree.root, res)
+            print("Postorder Traversal:", res)
+
+        elif choice == '5':
+            print("Level Order Traversal:", tree.level_order())
+
+        elif choice == '6':
+            print("Tree Height:", tree.height(tree.root))
+
+        elif choice == '7':
+            print("Total Nodes:", tree.count_nodes(tree.root))
+
+        elif choice == '8':
+            val = input("Enter value to search: ").strip()
+            print("Found!" if tree.search(tree.root, val) else "Not Found!")
+
+        elif choice == '9':
+            print("Exiting... Goodbye!")
+            break
+
+        else:
+            print("Invalid choice, try again.")
+
+
+if __name__ == "__main__":
+    main()
