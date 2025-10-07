@@ -1,0 +1,32 @@
+```python
+def linear_search(arr, target):
+    for i, num in enumerate(arr):
+        if num == target:
+            return i  
+    return -1 
+def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid 
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1  
+registered_roll_numbers = [102, 215, 324, 110, 87, 459, 221]
+roll_to_find = int(input("Enter the roll number to check registration: "))
+result_linear = linear_search(registered_roll_numbers, roll_to_find)
+if result_linear != -1:
+    print(f"Linear Search: Roll number {roll_to_find} is registered (index {result_linear}).")
+else:
+    print(f"Linear Search: Roll number {roll_to_find} is NOT registered.")
+registered_roll_numbers.sort()
+result_binary = binary_search(registered_roll_numbers, roll_to_find)
+if result_binary != -1:
+    print(f"Binary Search: Roll number {roll_to_find} is registered (index {result_binary}).")
+else:
+    print(f"Binary Search: Roll number {roll_to_find} is NOT registered.")
