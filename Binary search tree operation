@@ -1,0 +1,153 @@
+from datetime import datetime
+
+# Node class for BST
+class LogEntry:
+    def __init__(self, visitor_name, entry_time):
+        self.visitor_name = visitor_name
+        self.entry_time = entry_time  # datetime object
+        self.left = None
+        self.right = None
+
+    def __repr__(self):
+        return f"{self.visitor_name} ({self.entry_time.strftime('%H:%M:%S')})"
+
+# BST class
+class LogBookBST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, visitor_name, entry_time):
+        new_entry = LogEntry(visitor_name, entry_time)
+        if self.root is None:
+            self.root = new_entry
+        else:
+            self._insert(self.root, new_entry)
+
+    def _insert(self, node, new_entry):
+        if new_entry.entry_time < node.entry_time:
+            if node.left is None:
+                node.left = new_entry
+            else:
+                self._insert(node.left, new_entry)
+        else:
+            if node.right is None:
+                node.right = new_entry
+            else:
+                self._insert(node.right, new_entry)
+
+    def search(self, visitor_name):
+        return self._search(self.root, visitor_name)
+
+    def _search(self, node, visitor_name):
+        if node is None:
+            return None
+        if node.visitor_name.lower() == visitor_name.lower():
+            return node
+        left_result = self._search(node.left, visitor_name)
+        if left_result:
+            return left_result
+        return self._search(node.right, visitor_name)
+
+    def delete(self, entry_time):
+        self.root = self._delete(self.root, entry_time)
+
+    def _delete(self, node, entry_time):
+        if node is None:
+            return None
+        if entry_time < node.entry_time:
+            node.left = self._delete(node.left, entry_time)
+        elif entry_time > node.entry_time:
+            node.right = self._delete(node.right, entry_time)
+        else:
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
+            successor = self._min_value_node(node.right)
+            node.entry_time = successor.entry_time
+            node.visitor_name = successor.visitor_name
+            node.right = self._delete(node.right, successor.entry_time)
+        return node
+
+    def _min_value_node(self, node):
+        while node.left:
+            node = node.left
+        return node
+
+    def traverse(self):
+        entries = []
+        self._inorder(self.root, entries)
+        return entries
+
+    def _inorder(self, node, entries):
+        if node:
+            self._inorder(node.left, entries)
+            entries.append(node)
+            self._inorder(node.right, entries)
+
+    def count(self):
+        return self._count(self.root)
+
+    def _count(self, node):
+        if node is None:
+            return 0
+        return 1 + self._count(node.left) + self._count(node.right)
+if __name__ == "__main__":
+    logbook = LogBookBST()
+
+    while True:
+        print("\n--- LOG BOOK MENU ---")
+        print("1. Add Entry")
+        print("2. Search Entry")
+        print("3. Delete Entry")
+        print("4. Show All Entries")
+        print("5. Count Entries")
+        print("6. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            name = input("Enter visitor name: ")
+            time_str = input("Enter entry time (HH:MM:SS): ")
+            try:
+                time_obj = datetime.strptime(time_str, "%H:%M:%S")
+                logbook.insert(name, time_obj)
+                print("✅ Entry added successfully.")
+            except ValueError:
+                print("❌ Invalid time format! Use HH:MM:SS.")
+
+        elif choice == '2':
+            name = input("Enter visitor name to search: ")
+            result = logbook.search(name)
+            if result:
+                print("✅ Found:", result)
+            else:
+                print("❌ Visitor not found.")
+
+        elif choice == '3':
+            time_str = input("Enter entry time to delete (HH:MM:SS): ")
+            try:
+                time_obj = datetime.strptime(time_str, "%H:%M:%S")
+                logbook.delete(time_obj)
+                print("✅ Entry deleted (if existed).")
+            except ValueError:
+                print("❌ Invalid time format!")
+
+        elif choice == '4':
+            entries = logbook.traverse()
+            if entries:
+                print("\n--- All Entries ---")
+                for e in entries:
+                    print(e)
+            else:
+                print("📭 No entries found.")
+
+        elif choice == '5':
+            print("📋 Total entries:", logbook.count())
+
+        elif choice == '6':
+            print("👋 Exiting log book.")
+            break
+
+        else:
+            print("❌ Invalid choice. Try again.")
